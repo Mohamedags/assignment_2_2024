@@ -145,11 +145,13 @@ The launch file will:
     
 2. **Monitor Robot**: The Distance and Velocity Node will display the robot's current distance from the target and its average speed.
 
-3. **Query Target**: The Target Service Node can be queried for the last target coordinates using the `/last_goal service`.
+3. **Query Target**: The Target Service Node can be queried for the last target coordinates using the `/last_goal` service.
 
+---
 ### Flowchart
 ![Project Diagram](images/Flowchart.jpg)
-   
-- Illustration of the Robot Movement: 
+
+---   
+### Illustration of the Robot Movement: 
 ![Example GIF](images/illustration_rt2_part1.gif)
 
