@@ -148,7 +148,7 @@ The launch file will:
 3. **Query Target**: The Target Service Node can be queried for the last target coordinates using the `/last_goal service`.
 
 ### Flowchart
-![Project Diagram](images/Flowchart.png)
+![Project Diagram](images/Flowchart.jpg)
    
 - Illustration of the Robot Movement: 
 ![Example GIF](images/illustration_rt2_part1.gif)
