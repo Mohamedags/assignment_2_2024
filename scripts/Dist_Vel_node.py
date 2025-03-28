@@ -1,3 +1,26 @@
+"""
+.. module:: assignment_2_2024 
+  :noindex:
+  :platform: Unix
+  :synopsis: python module for the assignment_2_2024 package
+
+.. moduleauthor:: Mohamedags
+
+Version:
+    1.0
+
+Date:
+    28/03/2025
+
+Details:
+    - **Subscribes to**: `/robot_status`
+    - **Provides Service**: `dist_vel_from_target`
+
+Description:
+    This module computes the robot's real-time distance from a specified target position
+    and its average speed based on velocity data. It provides this data via a ROS service.
+"""
+
 #!/usr/bin/env python3
 
 import rospy
@@ -7,6 +30,12 @@ from assignment_2_2024.msg import RobotPoseVelocity
 from assignment_2_2024.srv import DistSpeed, DistSpeedResponse
 
 def compute_robot_metrics(data):
+    """
+    Compute the robot's distance from a target and its average speed.
+
+    Args:
+        data (RobotPoseVelocity): The message containing the robot's current pose and velocity.
+    """
     global last_time, update_interval, current_distance, avg_speed
     now = time.time()
 
@@ -22,6 +51,15 @@ def compute_robot_metrics(data):
         last_time = now
 
 def provide_metrics(req):
+    """
+    Provide the computed distance and average speed via a ROS service.
+
+    Args:
+        req (DistSpeedRequest): The service request (not used in this implementation).
+
+    Returns:
+        DistSpeedResponse: Response containing the distance and average speed.
+    """
     global current_distance, avg_speed
     return DistSpeedResponse(distance=current_distance, average_speed=avg_speed)
 
@@ -37,3 +75,4 @@ if __name__ == "__main__":
     rospy.Subscriber('/robot_status', RobotPoseVelocity, compute_robot_metrics)
 
     rospy.spin()
+

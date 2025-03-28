@@ -1,3 +1,28 @@
+"""
+.. module:: assignment_2_2024 
+  :noindex:
+  :platform: Unix
+  :synopsis: python module for the assignment_2_2024 package
+
+.. moduleauthor:: Mohamedags
+
+Version:
+    1.0
+
+Date:
+    28/03/2025
+
+Details:
+    - **Publishes to**: `/robot_status`
+    - **Subscribes to**: `/odom`
+    - **Provides Service**: `/last_goal`
+
+Description:
+    This module implements a ROS action client that sends goals to a navigation action server.
+    It also subscribes to odometry data, publishes robot status, and provides a service
+    for retrieving the last goal sent.
+"""
+
 #!/usr/bin/env python3
 
 import rospy
@@ -8,7 +33,17 @@ from assignment_2_2024.msg import PlanningAction, PlanningGoal
 from assignment_2_2024.srv import LastTarget, LastTargetResponse
 
 class ActionClientNode:
+    """
+    A ROS Action Client Node for goal-based navigation.
+
+    This class initializes a ROS node, subscribes to odometry data, and communicates
+    with an action server to send movement goals. It also provides a service to retrieve
+    the last goal sent.
+    """
     def __init__(self):
+        """
+        Initialize the ROS node, action client, publisher, subscriber, and service.
+        """
         rospy.init_node('Action_client')
 
         # Initialize action client
@@ -31,6 +66,12 @@ class ActionClientNode:
         self.latest_y = None
 
     def send_goal(self, x, y):
+        """
+        Send a movement goal to the action server.
+
+        :param x: The x-coordinate of the goal.
+        :param y: The y-coordinate of the goal.
+        """
         goal = PlanningGoal()
         goal.target_pose.pose.position.x = x
         goal.target_pose.pose.position.y = y
@@ -40,10 +81,18 @@ class ActionClientNode:
         rospy.loginfo(f"Goal dispatched: x={x}, y={y}")
 
     def cancel_goal(self):
+        """
+        Cancel the currently active goal.
+        """
         rospy.loginfo("Cancelling the current goal.")
         self.goal_client.cancel_goal()
 
     def process_odometry(self, odometry_data):
+        """
+        Process incoming odometry data and publish robot status.
+
+        :param odometry_data: The received odometry message.
+        """
         state_msg = RobotPoseVelocity()
         state_msg.x = odometry_data.pose.pose.position.x
         state_msg.y = odometry_data.pose.pose.position.y
@@ -52,10 +101,19 @@ class ActionClientNode:
         self.robot_state_pub.publish(state_msg)
 
     def handle_last_target_request(self, request):
+        """
+        Handle requests for the last sent goal coordinates.
+
+        :param request: The incoming service request.
+        :return: The last goal coordinates as a service response.
+        """
         rospy.loginfo(f"Returning last target coordinates: x={self.latest_x}, y={self.latest_y}")
         return LastTargetResponse(target_x=self.latest_x, target_y=self.latest_y)
 
     def goal_loop(self):
+        """
+        Continuously prompt the user for goal coordinates and send them to the action server.
+        """
         while not rospy.is_shutdown():
             try:
                 x = float(input("Enter the x-coordinate for the goal: "))
@@ -86,3 +144,4 @@ if __name__ == '__main__':
         node.goal_loop()
     except rospy.ROSInterruptException:
         pass
+
